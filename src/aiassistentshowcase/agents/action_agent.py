@@ -23,11 +23,20 @@ class ActionAgent():
         @agent.tool
         def list_all_customers_tool(ctx: RunContext[DBDependencies]):
             if ctx.deps is None:
-                raise ValueError("Dependencies (ctx.deps) wurden nicht gesetzt.")
+                raise ValueError("Dependencies (ctx.deps) are not set.")
             
             db = ctx.deps.db
             customers = db.list_all_customer()
             return f"{customers}"
+        
+        @agent.tool
+        def create_new_customer_tool(ctx: RunContext[DBDependencies], firstname: str, lastname: str, age: int, priority: int, note: str):
+            if ctx.deps is None:
+                raise ValueError("Dependencies (ctx.deps) not set!")
+            
+            db = ctx.deps.db
+            success_message = db.create_new_customer(firstname=firstname, lastname=lastname, age=age, priority=priority, note=note)
+            return success_message
         
         return agent
 
