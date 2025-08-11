@@ -12,5 +12,5 @@ class AgentResponseModel(BaseModel):
 class CustomerResponse(BaseModel):
     """Structured response for a request to retrieve customers from the database"""
     
-    satus_message: str = Field(description="""Structured response for a request to retrieve customers from the database""")
+    status_message: str = Field(description="""Structured response for a request to retrieve customers from the database""")
     customers: Optional[list] = None

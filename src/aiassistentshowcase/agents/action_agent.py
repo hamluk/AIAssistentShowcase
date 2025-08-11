@@ -6,8 +6,6 @@ from aiassistentshowcase.config import AIAssistentShowcaseSettings
 from aiassistentshowcase.agents.models import ModelFactory
 from pydantic_ai import Agent, RunContext
 
-import json
-
 
 class ActionAgent():
     def __init__(self, settings: AIAssistentShowcaseSettings):
@@ -22,38 +20,21 @@ class ActionAgent():
             system_prompt=system_customer_assistent_prompt
             )
 
-        # @agent.tool
-        # def list_all_customers_tool(ctx: RunContext[DBDependencies]):
-        #     if ctx.deps is None:
-        #         raise ValueError("Dependencies (ctx.deps) wurden nicht gesetzt.")
+        @agent.tool
+        def list_all_customers_tool(ctx: RunContext[DBDependencies]):
+            if ctx.deps is None:
+                raise ValueError("Dependencies (ctx.deps) wurden nicht gesetzt.")
             
-        #     db = ctx.deps.db
-        #     customers = db.list_all_customer()
-        #     return f"{customers}"
-        
-        # @agent.tool
-        # def create_new_customer_tool(ctx: RunContext[DBDependencies], firstname: str, lastname: str, age: int, priority: int, note: str):
-        #     if ctx.deps is None:
-        #         raise ValueError("Dependencies (ctx.deps) not set!")
-            
-        #     db = ctx.deps.db
-        #     success_message = db.create_new_customer(firstname=firstname, lastname=lastname, age=age, priority=priority, note=note)
-        #     return success_message
+            db = ctx.deps.db
+            customers = db.list_all_customer()
+            return f"{customers}"
         
         return agent
 
-    def run(self, query: str) -> str:
-        print("Query: ", query)
+    def run(self, query: str, deps) -> str:
         try:
-            result = self.agent.run_sync(query)
-            print("Answer received")
-            result_all_json = json.loads(result.all_messages_json())
-            print(json.dumps(result_all_json, indent=4))
-            print(" ----- END OF ALL MESAGES ---- ")
-            print("------ AI Agent response: ------\n")
-            print(json.dumps(result.output.__dict__, indent=4))
+            result = self.agent.run_sync(user_prompt=query, deps=deps)
             return result.output.__dict__["response"]
         except Exception as e:
-            print("Error during agent run:", e)
             return f"An error occurred: {str(e)}"
         

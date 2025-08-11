@@ -29,7 +29,6 @@ def set_api_model_and_key():
 def unlock_fields():
     st.session_state.locked = False
 
-# AI Model selection
 st.selectbox(
         key="api_model_input", 
         label="Select AI Model:", 
@@ -37,7 +36,6 @@ st.selectbox(
         index=0,
         disabled=st.session_state.locked)
 
-# AI API Key input
 st.text_input(
         key="api_key_input", 
         label="API Key:", 
@@ -55,7 +53,6 @@ else:
         label="Set Model and API Key",
         on_click=set_api_model_and_key)
 
-# Prüfen, ob Key vorhanden ist
 if not st.session_state.api_key:
     st.warning("This Demo only works if you provide your API Key.")
     st.stop()
@@ -70,21 +67,18 @@ else:
         active_model=llm_model_full_str[0],
         tavily_api_key=st.secrets["TAVILY_API_KEY"])
 
-    # Chat-Funktionalität
     st.subheader("Ask the AI Assistant")
     user_input = st.text_area("Your question:", "")
 
     if st.button("Senden"):
         if user_input.strip():
             try:
-                    # AI Agent mit Key initialisieren
                 agent = ActionAgent(settings=settings)
                 db_connection = DatabaseConnection()
                 db_deps = DBDependencies(db=db_connection)
 
                 with st.spinner("Processing your request..."):
-                    # Run the agent with the user input and database dependencies
-                    answer = agent.run(query=user_input)
+                    answer = agent.run(query=user_input, deps=db_deps)
                 st.markdown(f"**Answer:** {answer}")
             except ModelHTTPError:
                 st.error("There was an error processing your request. Please check your API Key and try again.")

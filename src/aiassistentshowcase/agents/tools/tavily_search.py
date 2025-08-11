@@ -4,5 +4,4 @@ from aiassistentshowcase.config import AIAssistentShowcaseSettings
 def create_tool_set(settings: AIAssistentShowcaseSettings) -> list:
     tool_set = []
     tool_set.append(tavily_search_tool(settings.tavily_api_key))
-    print("tool set:", tool_set)
     return tool_set

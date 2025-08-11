@@ -1,28 +1,29 @@
+from supabase import create_client
+
+import os
 
 class DatabaseConnection:
+    def __init__(self):
+        url = os.environ.get("SUPABASE_URL")
+        key = os.environ.get("SUPABASE_KEY")
+        
+        if not url or not key:
+            raise ValueError("Supabase URL and Key must be set in environment variables.")
+        
+        self.supabase_client = create_client(url, key)
+
     def list_all_customer(self) -> list[str]:
         """
-        Lists all current customers
+        Lists all current customers.
+        The priority is sorted from 1 to 5, where 1 is the highest priority and 5 is the lowest priority.
 
         Returns:
             [Customers]: List of all customers from database
         """
 
-        return "To be done"
-        
-    def create_new_customer(self, firstname: str, lastname: str, age: int, priority: int, note: str) -> str:
-        """
-        Creates a new customer
+        response = self.supabase_client.table("customer").select("*").execute()
 
-        Args:
-            firstname (str): The firstname of the customer
-            lastname (str): The lastname of the customer
-            age (int): The age of the customer, has to be from 1 to 100
-            priority (int): The priority of the customer, choose a value based on the given note, MUST BE between 1 and 5
-            note (str): Note to the customer, tells what the customer is interested in
-
-        Returns:
-            str: Success message when creating the customer. If an error has occurred, a negative success message is returned.
-        """
-
-        return "To be done"
+        if len(response.data) > 0:
+            return response.data
+        else:
+            return "No customers found."
