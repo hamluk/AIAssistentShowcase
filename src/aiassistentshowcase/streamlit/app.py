@@ -20,6 +20,14 @@ if "locked" not in st.session_state:
     st.session_state.locked = False 
 if "show_customers" not in st.session_state:
     st.session_state.show_customers = False
+if "prompt_input" not in st.session_state:
+    st.session_state.prompt_input = ""
+
+example_prompts = [
+    "How can you assits me?",
+    "Which customers need special support and how can I help them?",
+    "I had my first meeting with Arnold Schwarzenegger. Arnold is 78 and a senior developer whose intrests are AI for building muscles and shooting movies."
+]
 
 url: str = st.secrets["SUPABASE_URL"]
 key: str = st.secrets["SUPABASE_KEY"]
@@ -40,28 +48,23 @@ def toggle_view_customer():
 st.title("AI Smart Customer Assistent")
 
 st.markdown("""
-Welcome to my **AI Assistant Showcase**!  
-This demo showcases how AI Agents, enhanced with modern LLM integration and equipped with database-access tools, can autonomously decide which of the available tools to use in order to complete a given task.
+        ##### Disclaimer: This demo is not another ChatGPT clone, but rather an autonomously deciding AI agent 🧠💬
+                    
+        *Q: What does this mean?*  
+        A: This showcase demonstrates how an AI Agent is capable of autonomously deciding which tool to use in order to complete a given task.\
+        In this particular case, the AI agent can access a database to not only answer your questions but also take care of data management tasks.\
+            
 
-Enter your question/ task below and see how my AI Assistant responds in real time.
-""")
-
-# --- Call to Action ---
-st.subheader("📩 Interested for more?")
-st.markdown("""
-If you enjoyed this showcase and want to explore **AI solutions** for your business or project,  
-feel free to reach out:
-""")
-
-col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
-with col1:
-    st.markdown("[🌐 Visit my Website](https://lukashamm.dev)")
-with col2:
-    st.markdown("[💬 Visit my LinkedIn Profile](https://www.linkedin.com/in/lukashamm-dev)")
-with col3:
-    st.markdown("[👨‍💻 View my GitHub](https://github.com/hamluk)")
-with col4:
-    st.markdown("[📧 Send me an Email](mailto:lukas@lukashamm.dev)")
+        *Q: How does it work?*  
+        A: Find out for yourself — try starting by asking how it can help you.
+            
+        #### 📩 Interested in more?
+        If you enjoyed this showcase and want to explore custom **AI solutions** for your business or project,  
+        feel free to reach out:
+            
+        | [🌐 Visit my Website](https://lukashamm.dev) | [💬 Visit my LinkedIn Profile](https://www.linkedin.com/in/lukashamm-dev) | [👨‍💻 View my GitHub](https://github.com/hamluk) | [📧 Send me an Email](mailto:lukas@lukashamm.dev) |
+        |---|---|---|---|
+        """)
 
 st.divider()
 
@@ -106,7 +109,12 @@ else:
         tavily_api_key=st.secrets["TAVILY_API_KEY"])
 
     st.subheader("Ask the AI Assistant")
-    user_input = st.text_area("Your question:", "")
+    with st.expander("See example prompts"):
+        for prompt in example_prompts:
+            if st.button(prompt, type="tertiary"):
+                st.session_state.prompt_input = prompt
+    
+    user_input = st.text_area("Your question:", value=st.session_state.prompt_input)
 
     if st.button("Ask"):
         if user_input.strip():
