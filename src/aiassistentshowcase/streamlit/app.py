@@ -47,24 +47,25 @@ def toggle_view_customer():
 
 st.title("AI Smart Customer Assistent")
 
-st.markdown("""
-        ##### Disclaimer: This demo is not another ChatGPT clone, but rather an autonomously deciding AI agent 🧠💬
-                    
-        *Q: What does this mean?*  
-        A: This showcase demonstrates how an AI Agent is capable of autonomously deciding which tool to use in order to complete a given task.\
-        In this particular case, the AI agent can access a database to not only answer your questions but also take care of data management tasks.\
-            
-
-        *Q: How does it work?*  
-        A: Find out for yourself — try starting by asking how it can help you.
-            
-        #### 📩 Interested in more?
-        If you enjoyed this showcase and want to explore custom **AI solutions** for your business or project,  
-        feel free to reach out:
-            
-        | [🌐 Visit my Website](https://lukashamm.dev) | [💬 Visit my LinkedIn Profile](https://www.linkedin.com/in/lukashamm-dev) | [👨‍💻 View my GitHub](https://github.com/hamluk) | [📧 Send me an Email](mailto:lukas@lukashamm.dev) |
-        |---|---|---|---|
-        """)
+with st.expander("Read Me:"):
+    st.markdown("""
+            ##### Disclaimer: This demo is not another ChatGPT clone, but rather an autonomously deciding AI agent 🧠💬
+                        
+            *Q: What does this mean?*  
+            A: This showcase demonstrates how an AI Agent is capable of autonomously deciding which tool to use in order to complete a given task.\
+            In this particular case, the AI agent can access a database to not only answer your questions but also take care of data management tasks.\
+                
+    
+            *Q: How does it work?*  
+            A: Find out for yourself — try starting by asking how it can help you.
+                
+            #### 📩 Interested in more?
+            If you enjoyed this showcase and want to explore custom **AI solutions** for your business or project,  
+            feel free to reach out:
+                
+            | [🌐 Visit my Website](https://lukashamm.dev) | [💬 Visit my LinkedIn Profile](https://www.linkedin.com/in/lukashamm-dev) | [👨‍💻 View my GitHub](https://github.com/hamluk) | [📧 Send me an Email](mailto:lukas@lukashamm.dev) |
+            |---|---|---|---|
+            """)
 
 st.divider()
 
@@ -73,7 +74,7 @@ st.write("Please choose form the following supported models and provider your ow
 st.selectbox(
         key="api_model_input", 
         label="Select AI Model:", 
-        options=["mistral:mistral-small-latest"], 
+        options=["mistral:mistral-small-latest", "openai:gpt-4o-mini"],
         index=0,
         disabled=st.session_state.locked)
 
@@ -103,8 +104,8 @@ if not st.session_state.locked:
 else:
     llm_model_full_str = str(st.session_state.api_model).split(":")
     settings = AIAssistentShowcaseSettings(
-        llm_mistral_model=llm_model_full_str[1],
-        mistral_api_key=st.session_state.api_key,
+        llm_model=llm_model_full_str[1],
+        model_api_key=st.session_state.api_key,
         active_model=llm_model_full_str[0],
         tavily_api_key=st.secrets["TAVILY_API_KEY"])
 
